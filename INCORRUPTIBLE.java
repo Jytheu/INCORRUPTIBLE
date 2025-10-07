@@ -1,67 +1,39 @@
 import java.util.*;
 
 public class INCORRUPTIBLE {
-
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
+        System.out.println("=== WELCOME TO INCORRUPTIBLE ===");
 
-        System.out.println("Welcome to INCORRUPTIBLE!");
-        System.out.println("Choose your fighters!");
-        System.out.println("Skills: 1 = Basic, 2 = Skill, 3 = Ultimate\n");
+        Character char1 = chooseCharacter(sc, 1);
+        Character char2 = chooseCharacter(sc, 2);
 
-        System.out.println("Available Characters:");
-        System.out.println("1. Ren");
-        System.out.println("2. Nuel");
-        System.out.println("3. (Other characters to be added by team)");
-
-        System.out.print("\nPlayer 1, choose your character (1-3): ");
-        int p1Choice = scanner.nextInt();
-        Character char1 = chooseCharacter(p1Choice);
-
-        System.out.print("Player 2, choose your character (1-3): ");
-        int p2Choice = scanner.nextInt();
-        Character char2 = chooseCharacter(p2Choice);
-
-        System.out.println("\n" + char1.getName() + " VS " + char2.getName() + "!");
-        System.out.println("The battle begins!\n");
+        System.out.println("\n" + char1.getName() + " VS " + char2.getName() + "!\nLet the battle begin!");
 
         Character[] characters = {char1, char2};
-        int currentTurn = 0;
+        int turn = 0;
 
-        while (true) {
-            Character current = characters[currentTurn % 2];
-            Character opponent = characters[(currentTurn + 1) % 2];
-
-            if (!opponent.isAlive()) {
-                System.out.println("\n--- Game Over! ---");
-                System.out.println(current.getName() + " wins!");
-                break;
-            }
+        while (char1.isAlive() && char2.isAlive()) {
+            Character current = characters[turn % 2];
+            Character opponent = characters[(turn + 1) % 2];
 
             current.regenerateStamina();
-            System.out.println("\n--- " + current.getName() + "'s Turn ---");
-            System.out.println(char1.getName() + ": " + (char1.isAlive() ? char1.getHealth() + "/" + char1.getMaxHealth() : "DEAD") + " HP");
-            System.out.println(char2.getName() + ": " + (char2.isAlive() ? char2.getHealth() + "/" + char2.getMaxHealth() : "DEAD") + " HP");
-            System.out.println(current.getName() + " Stamina: " + current.getStamina() + "/" + current.getMaxStamina());
+            displayStats(char1, char2);
+            takeTurn(current, opponent, sc);
 
-            System.out.print("Choose skill (1=Basic, 2=Skill, 3=Ultimate): ");
-            int skillChoice = scanner.nextInt();
-
-            switch(skillChoice) {
-                case 1: current.basicAttack(opponent); break;
-                case 2: current.skillAttack(opponent); break;
-                case 3: current.ultimateAttack(opponent); break;
-                default: System.out.println("Invalid choice! Skipping turn."); break;
-            }
-
-            currentTurn++;
+            turn++;
         }
 
-        scanner.close();
+        System.out.println("\n--- GAME OVER ---");
+        System.out.println((char1.isAlive() ? char1.getName() : char2.getName()) + " wins!");
+        sc.close();
     }
 
-    public static Character chooseCharacter(int choice) {
-        return switch (choice) {
+    private static Character chooseCharacter(Scanner sc, int player) {
+        System.out.println("\nPlayer " + player + ", choose your character:");
+        System.out.println("1. Ren   2. Nuel   3. (others coming soon)");
+        int choice = sc.nextInt();
+        return switch(choice) {
             case 1 -> new Ren();
             case 2 -> new Nuel();
             default -> {
@@ -69,5 +41,24 @@ public class INCORRUPTIBLE {
                 yield new Ren();
             }
         };
+    }
+
+    private static void displayStats(Character c1, Character c2) {
+        System.out.println("\n--- Current Stats ---");
+        System.out.printf("%-15s HP: %-4d | Stamina: %-4d%n", c1.getName(), c1.getHealth(), c1.getStamina());
+        System.out.printf("%-15s HP: %-4d | Stamina: %-4d%n", c2.getName(), c2.getHealth(), c2.getStamina());
+    }
+
+    private static void takeTurn(Character current, Character opponent, Scanner sc) {
+        System.out.println("\n--- " + current.getName() + "'s Turn ---");
+        System.out.println("1: Basic  2: Skill  3: Ultimate");
+        int choice = sc.nextInt();
+
+        switch(choice) {
+            case 1 -> current.basicAttack(opponent);
+            case 2 -> current.skillAttack(opponent);
+            case 3 -> current.ultimateAttack(opponent);
+            default -> System.out.println("Invalid! Skipping turn.");
+        }
     }
 }

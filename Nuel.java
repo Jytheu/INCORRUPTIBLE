@@ -13,6 +13,6 @@ class Nuel extends Character {
 
     @Override
     public void ultimateAttack(Character target) {
-        performAttack(target, 25, 30, 40, "Power Debate"); // Confuses opponent (implement later)
+        performAttack(target, 25, 30, 40, "Power Debate"); // TODO Confuses opponent (implement later)
     }
 }

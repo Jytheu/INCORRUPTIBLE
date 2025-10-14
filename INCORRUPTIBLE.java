@@ -1,73 +1,168 @@
 import java.util.*;
 
 public class INCORRUPTIBLE {
-
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
+        System.out.println("=== WELCOME TO INCORRUPTIBLE ===");
+        System.out.println("=== PROGRESS BUILD / ARCADE EDITION ===");
 
-        System.out.println("Welcome to INCORRUPTIBLE!");
-        System.out.println("Choose your fighters!");
-        System.out.println("Skills: 1 = Basic, 2 = Skill, 3 = Ultimate\n");
+        boolean playAgain;
+        do {
+            System.out.println("\nChoose a game mode:");
+            System.out.println("1: Player vs Player");
+            System.out.println("2: Player vs AI");
+            System.out.println("3: Arcade Mode (1 hero vs all others)");
+            System.out.println("x: Exit");
 
-        System.out.println("Available Characters:");
-        System.out.println("1. Ren");
-        System.out.println("2. Nuel");
-        System.out.println("3. (Other characters to be added by team)");
-
-        System.out.print("\nPlayer 1, choose your character (1-3): ");
-        int p1Choice = scanner.nextInt();
-        Character char1 = chooseCharacter(p1Choice);
-
-        System.out.print("Player 2, choose your character (1-3): ");
-        int p2Choice = scanner.nextInt();
-        Character char2 = chooseCharacter(p2Choice);
-
-        System.out.println("\n" + char1.getName() + " VS " + char2.getName() + "!");
-        System.out.println("The battle begins!\n");
-
-        Character[] characters = {char1, char2};
-        int currentTurn = 0;
-
-        while (true) {
-            Character current = characters[currentTurn % 2];
-            Character opponent = characters[(currentTurn + 1) % 2];
-
-            if (!opponent.isAlive()) {
-                System.out.println("\n--- Game Over! ---");
-                System.out.println(current.getName() + " wins!");
+            String input = sc.next();
+            if (input.equalsIgnoreCase("x")) {
+                System.out.println("Exiting game...");
                 break;
             }
 
-            current.regenerateStamina();
-            System.out.println("\n--- " + current.getName() + "'s Turn ---");
-            System.out.println(char1.getName() + ": " + (char1.isAlive() ? char1.getHealth() + "/" + char1.getMaxHealth() : "DEAD") + " HP");
-            System.out.println(char2.getName() + ": " + (char2.isAlive() ? char2.getHealth() + "/" + char2.getMaxHealth() : "DEAD") + " HP");
-            System.out.println(current.getName() + " Stamina: " + current.getStamina() + "/" + current.getMaxStamina());
+            int mode;
+            try { mode = Integer.parseInt(input); }
+            catch (Exception e) { mode = 1; }
 
-            System.out.print("Choose skill (1=Basic, 2=Skill, 3=Ultimate): ");
-            int skillChoice = scanner.nextInt();
+            Character player1 = chooseCharacter(sc, 1);
+            Character player2;
 
-            switch(skillChoice) {
-                case 1: current.basicAttack(opponent); break;
-                case 2: current.skillAttack(opponent); break;
-                case 3: current.ultimateAttack(opponent); break;
-                default: System.out.println("Invalid choice! Skipping turn."); break;
+            switch (mode) {
+                case 1 -> {
+                    player2 = chooseCharacter(sc, 2);
+                    playBattle(player1, player2, sc);
+                }
+                case 2 -> {
+                    System.out.println("\n--- Player vs AI ---");
+                    player2 = getRandomAI(player1);
+                    System.out.println("You will face AI: " + player2.getName());
+                    playBattle(player1, player2, sc);
+                }
+                case 3 -> playArcade(player1, sc);
+                default -> System.out.println("Invalid mode.");
             }
 
-            currentTurn++;
-        }
+            System.out.print("\nPlay again? (y/n): ");
+            playAgain = sc.next().equalsIgnoreCase("y");
 
-        scanner.close();
+        } while (playAgain);
+
+        System.out.println("\n=== THANK YOU FOR PLAYING INCORRUPTIBLE ===");
+        sc.close();
     }
 
-    public static Character chooseCharacter(int choice) {
+    // === CHARACTER SELECTION ===
+    private static Character chooseCharacter(Scanner sc, int player) {
+        System.out.println("\nPlayer " + player + ", choose your character:");
+        System.out.println("[1] Ren the Boxer");
+        System.out.println("[2] Nuel the Combo Hero");
+        System.out.println("[3] Nagumo the Trickster");
+        System.out.println("[4] Taro Sakamoto the Silent Marksman");
+        System.out.print("Enter choice: ");
+
+        int choice;
+        try { choice = Integer.parseInt(sc.next()); } 
+        catch (Exception e) { choice = 1; }
+
         return switch (choice) {
             case 1 -> new Ren();
             case 2 -> new Nuel();
-            default -> {
-                System.out.println("Invalid choice! Defaulting to Ren.");
-                yield new Ren();
-            }
+            case 3 -> new Nagumo();
+            case 4 -> new TaroSakamoto();
+            default -> new Ren();
         };
+    }
+
+    // === PLAYER VS PLAYER / AI ===
+    private static void playBattle(Character p1, Character p2, Scanner sc) {
+        System.out.println("\n--- " + p1.getName() + " VS " + p2.getName() + " ---");
+        Character[] fighters = {p1, p2};
+        int turn = 0;
+
+        while (p1.isAlive() && p2.isAlive()) {
+            Character current = fighters[turn % 2];
+            Character enemy = fighters[(turn + 1) % 2];
+
+            current.regenerateStamina();
+            showStats(p1, p2);
+
+            if (!takeTurn(current, enemy, sc)) break;
+            turn++;
+        }
+
+        System.out.println("\n=== " + (p1.isAlive() ? p1.getName() : p2.getName()) + " wins! ===");
+    }
+
+    // === ARCADE MODE ===
+    private static void playArcade(Character player, Scanner sc) {
+        System.out.println("\n=== ARCADE MODE START ===");
+        System.out.println("Defeat all opponents to face the Final Boss!");
+
+        List<Character> stages = new ArrayList<>(Arrays.asList(
+            new Ren(), new Nuel(), new Nagumo(), new TaroSakamoto()
+        ));
+        stages.removeIf(c -> c.getName().equals(player.getName()));
+
+        int stageNum = 1;
+        for (Character enemy : stages) {
+            System.out.println("\n--- STAGE " + stageNum + ": " + player.getName() + " VS " + enemy.getName() + " ---");
+            playBattle(player, enemy, sc);
+
+            if (!player.isAlive()) {
+                System.out.println("\n💀 You were defeated at Stage " + stageNum + "!");
+                return;
+            }
+
+            System.out.println("\n✅ Stage " + stageNum + " cleared!");
+            player.recoverAfterStage();
+            stageNum++;
+        }
+        
+        // FINAL BOSS
+        System.out.println("\n🔥 FINAL STAGE: THE DARKNESS RISES...");
+        try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
+        System.out.println("\n💀 FINAL BOSS APPEARS: King Void, the Corrupted Hero! 💀");
+
+        Character boss = new KingVoid();
+        playBattle(player, boss, sc);
+
+        if (player.isAlive()) {
+            System.out.println("\n🌟 YOU DEFEATED KING VOID! 🌟");
+            System.out.println("=== ARCADE MODE COMPLETE ===");
+        } else {
+            System.out.println("\n💀 You were consumed by darkness...");
+        }
+    }
+
+    // === HELPERS ===
+    private static Character getRandomAI(Character exclude) {
+        List<Character> chars = Arrays.asList(new Ren(), new Nuel(), new Nagumo(), new TaroSakamoto());
+        chars.removeIf(c -> c.getName().equals(exclude.getName()));
+        return chars.get(new Random().nextInt(chars.size()));
+    }
+
+    private static void showStats(Character c1, Character c2) {
+        System.out.println("\n--- Current Stats ---");
+        System.out.printf("%-25s HP: %3d | Stamina: %3d%n", c1.getName(), c1.getHealth(), c1.getStamina());
+        System.out.printf("%-25s HP: %3d | Stamina: %3d%n", c2.getName(), c2.getHealth(), c2.getStamina());
+    }
+
+    private static boolean takeTurn(Character attacker, Character defender, Scanner sc) {
+        System.out.println("\n--- " + attacker.getName() + "'s Turn ---");
+        System.out.println("[1] Basic  [2] Skill  [3] Ultimate  [x] Exit");
+        String input = sc.next();
+
+        if (input.equalsIgnoreCase("x")) {
+            System.out.println(attacker.getName() + " has forfeited!");
+            return false;
+        }
+
+        switch (input) {
+            case "1" -> attacker.basicAttack(defender);
+            case "2" -> attacker.skillAttack(defender);
+            case "3" -> attacker.ultimateAttack(defender);
+            default -> System.out.println("Invalid move!");
+        }
+        return true;
     }
 }

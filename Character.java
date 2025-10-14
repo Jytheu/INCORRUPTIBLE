@@ -2,54 +2,50 @@ import java.util.*;
 
 public abstract class Character {
     protected String name;
-    protected int hp;
-    protected int maxHp;
-    protected int stamina;
-    protected int maxStamina;
-    protected int regenStamina;
-    protected Random random;
+    protected int hp, maxHp;
+    protected int stamina, maxStamina;
+    protected int regen;
+    protected Random random = new Random();
 
-    public Character(String name, int maxHp, int maxStamina, int regenStamina){
+    public Character(String name, int hp, int stamina, int regen) {
         this.name = name;
-        this.maxHp = maxHp;
-        this.hp = maxHp;
-        this.maxStamina = maxStamina;
-        this.stamina = maxStamina;
-        this.regenStamina = regenStamina;
-        this.random = new Random();
+        this.maxHp = hp;
+        this.hp = hp;
+        this.maxStamina = stamina;
+        this.stamina = stamina;
+        this.regen = regen;
     }
 
-    public void regenerateStamina(){
-        this.stamina = Math.min(this.maxStamina, this.stamina + this.regenStamina);
+    public void regenerateStamina() {
+        stamina = Math.min(maxStamina, stamina + regen);
     }
 
-    protected void performAttack(Character target, int minDamage, int maxDamage, int staminaCost, String skillName) {
-        if (this.stamina < staminaCost) {
-            System.out.println(this.name + " does not have enough stamina for " + skillName + "! (Costs " + staminaCost + ", has " + this.stamina + ")");
+    public void recoverAfterStage() {
+        int heal = (int)(maxHp * 0.3);
+        hp = Math.min(maxHp, hp + heal);
+        stamina = maxStamina;
+        System.out.println("Recovered 30% HP and full stamina!");
+    }
+
+    protected void performAttack(Character target, int min, int max, int cost, String skillName) {
+        if (stamina < cost) {
+            System.out.println(name + " lacks stamina for " + skillName + "!");
             return;
         }
-        this.stamina -= staminaCost;
-        int damage = minDamage + this.random.nextInt(maxDamage - minDamage + 1);
-        target.takeDamage(damage);
-        System.out.println(this.name + " uses " + skillName + " and deals " + damage + " damage to " + target.name + "!");
+        stamina -= cost;
+        int dmg = min + random.nextInt(max - min + 1);
+        target.takeDamage(dmg);
+        System.out.println(name + " uses " + skillName + " dealing " + dmg + " damage!");
     }
 
-    public abstract void basicAttack(Character target);
-    public abstract void skillAttack(Character target);
-    public abstract void ultimateAttack(Character target);
+    public void takeDamage(int dmg) { hp = Math.max(0, hp - dmg); }
+    public boolean isAlive() { return hp > 0; }
 
-    public void takeDamage(int damage) {
-        this.hp -= damage;
-        if (this.hp < 0) hp = 0;
-    }
+    public String getName() { return name; }
+    public int getHealth() { return hp; }
+    public int getStamina() { return stamina; }
 
-    public boolean isAlive() {
-        return this.hp > 0;
-    }
-
-    public String getName() { return this.name; }
-    public int getHealth() { return this.hp; }
-    public int getMaxHealth() { return this.maxHp; }
-    public int getStamina() { return this.stamina; }
-    public int getMaxStamina() { return this.maxStamina; }
+    public abstract void basicAttack(Character t);
+    public abstract void skillAttack(Character t);
+    public abstract void ultimateAttack(Character t);
 }

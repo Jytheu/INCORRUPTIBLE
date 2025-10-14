@@ -48,6 +48,12 @@ public abstract class Character {
     }
 
     public String getName() { return this.name; }
+
+    /**
+     * Sets the character's name. This is used to add suffixes like (You) or (Player 1).
+     * @param name The new name for the character.
+     */
+    public void setName(String name) { this.name = name; }
     public int getHealth() { return this.hp; }
     public int getMaxHealth() { return this.maxHp; }
     public int getStamina() { return this.stamina; }

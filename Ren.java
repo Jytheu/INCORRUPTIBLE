@@ -13,6 +13,6 @@ class Ren extends Character {
 
     @Override
     public void ultimateAttack(Character target) {
-        performAttack(target, 25, 30, 40, "Slam"); // TODO Stuns opponent (implement later)
+        performAttack(target, 40, 50, 60, "Slam");
     }
 }

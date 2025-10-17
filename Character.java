@@ -38,6 +38,10 @@ public abstract class Character {
         System.out.println(name + " uses " + skillName + " dealing " + dmg + " damage!");
     }
 
+    public abstract void basicAttack(Character target);
+    public abstract void skillAttack(Character target);
+    public abstract void ultimateAttack(Character target);
+
     public void takeDamage(int dmg) { hp = Math.max(0, hp - dmg); }
     public boolean isAlive() { return hp > 0; }
 

@@ -1,7 +1,7 @@
-class Nino extends Character {
-    public Nino() {
+class Dafaquer extends Character {
+    public Dafaquer() {
         // Default stats. TODO: Customize them!
-        super("Nino", 100, 100, 10);
+        super("Dafaquer", 100, 100, 10);
     }
 
     @Override

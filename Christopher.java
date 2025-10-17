@@ -1,7 +1,7 @@
-class Nino extends Character {
-    public Nino() {
+class Christopher extends Character {
+    public Christopher() {
         // Default stats. TODO: Customize them!
-        super("Nino", 100, 100, 10);
+        super("Christopher the Tank", 100, 100, 10);
     }
 
     @Override

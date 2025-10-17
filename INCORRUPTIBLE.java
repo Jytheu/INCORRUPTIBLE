@@ -39,8 +39,8 @@ public class INCORRUPTIBLE {
                     break;
                 case 2: // PvAI
                     Character ai;
-                    // Randomly choose an AI opponent from the available characters.
-                    int aiChoice = new Random().nextInt(3) + 1;
+                    // Randomly choose an AI opponent from all available characters.
+                    int aiChoice = new Random().nextInt(8) + 1;
                     switch (aiChoice) {
                         case 1:
                             ai = new Ren();
@@ -49,8 +49,23 @@ public class INCORRUPTIBLE {
                             ai = new Nuel();
                             break;
                         case 3:
-                        default:
                             ai = new Jed();
+                            break;
+                        case 4:
+                            ai = new Nino();
+                            break;
+                        case 5:
+                            ai = new Christopher();
+                            break;
+                        case 6:
+                            ai = new Dafaquer();
+                            break;
+                        case 7:
+                            ai = new Jason();
+                            break;
+                        case 8:
+                        default:
+                            ai = new Masocol();
                             break;
                     }
                     System.out.println("\nYour opponent is " + ai.getName() + "!");
@@ -148,7 +163,7 @@ public class INCORRUPTIBLE {
         }
     }
 
-    // Added on Oct 14
+    // Added Oct 14
     private static void takeAITurn(Character current, Character opponent) {
         System.out.println("\n--- " + current.getName() + "'s Turn (AI) ---");
         Random random = new Random();
@@ -176,7 +191,8 @@ public class INCORRUPTIBLE {
     // === HELPER METHODS ===
     private static Character chooseCharacter(Scanner sc, int player) {
         System.out.println("\nPlayer " + player + ", choose your character (x to exit):");
-        System.out.println("[1] Ren   [2] Nuel   [3] Jed");
+        System.out.println("[1] Ren         [2] Nuel        [3] Jed         [4] Nino");
+        System.out.println("[5] Christopher [6] Dafaquer    [7] Jason       [8] Masocol");
         String input = sc.next();
 
         if(input.equalsIgnoreCase("x")) {
@@ -193,6 +209,11 @@ public class INCORRUPTIBLE {
             case 1 -> new Ren();
             case 2 -> new Nuel();
             case 3 -> new Jed();
+            case 4 -> new Nino();
+            case 5 -> new Christopher();
+            case 6 -> new Dafaquer();
+            case 7 -> new Jason();
+            case 8 -> new Masocol();
             default -> {
                 System.out.println("Invalid choice! Defaulting to Ren.");
                 yield new Ren();
@@ -202,8 +223,19 @@ public class INCORRUPTIBLE {
 
     private static void displayStats(Character c1, Character c2) {
         System.out.println("\n--- Current Stats ---");
-        System.out.printf("%-15s HP: %-4d | Stamina: %-4d%n", c1.getName(), c1.getHealth(), c1.getStamina());
-        System.out.printf("%-15s HP: %-4d | Stamina: %-4d%n", c2.getName(), c2.getHealth(), c2.getStamina());
+        // Header with character names, padded to 25 characters for alignment
+        System.out.printf("%-25s\t%-25s%n", c1.getName(), c2.getName());
+        System.out.println("-------------------------   -------------------------"); // Separator line
+
+        // HP Stats, showing current/max
+        String c1HP = String.format("HP: %d/%d", c1.getHealth(), c1.getMaxHealth());
+        String c2HP = String.format("HP: %d/%d", c2.getHealth(), c2.getMaxHealth());
+        System.out.printf("%-25s\t%-25s%n", c1HP, c2HP);
+
+        // Stamina Stats, showing current/max
+        String c1Stamina = String.format("Stamina: %d/%d", c1.getStamina(), c1.getMaxStamina());
+        String c2Stamina = String.format("Stamina: %d/%d", c2.getStamina(), c2.getMaxStamina());
+        System.out.printf("%-25s\t%-25s%n", c1Stamina, c2Stamina);
     }
 
     private static boolean takeTurn(Character current, Character opponent, Scanner sc) {

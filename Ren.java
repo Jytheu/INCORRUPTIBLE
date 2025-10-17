@@ -4,6 +4,7 @@ class Ren extends Character {
     @Override
     public void basicAttack(Character target) {
         performAttack(target, 15, 18, 0, "Quick Jab");
+        onBasicAttack(); // Ensure onBasicAttack is called after performing the attack
     }
 
     @Override

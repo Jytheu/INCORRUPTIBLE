@@ -9,6 +9,7 @@ class Jed extends Character {
     public void basicAttack(Character target) {
         // A low-damage, no-cost attack.
         performAttack(target, 12, 15, 0, "Prank Trap");
+        onBasicAttack();
     }
 
     @Override

@@ -4,6 +4,7 @@ class Nuel extends Character {
     @Override
     public void basicAttack(Character target) {
         performAttack(target, 15, 18, 0, "Justice Combo");
+        onBasicAttack();
     }
 
     @Override

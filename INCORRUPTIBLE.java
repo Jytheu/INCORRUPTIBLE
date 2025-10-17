@@ -125,7 +125,7 @@ public class INCORRUPTIBLE {
             Character current = characters[turn % 2];
             Character opponent = characters[(turn + 1) % 2];
 
-            current.regenerateStamina();
+            // Stamina is restored by using Basic attacks now. No per-turn regen.
             displayStats(c1, c2);
             if(!takeTurn(current, opponent, sc)) break; // false = exit
 
@@ -146,7 +146,7 @@ public class INCORRUPTIBLE {
             Character current = (turn % 2 == 0) ? player : ai;
             Character opponent = (turn % 2 == 0) ? ai : player;
 
-            current.regenerateStamina();
+            // Stamina is restored by using Basic attacks now. No per-turn regen.
             displayStats(player, ai);
 
             if (current == player) {
@@ -167,25 +167,19 @@ public class INCORRUPTIBLE {
     private static void takeAITurn(Character current, Character opponent) {
         System.out.println("\n--- " + current.getName() + "'s Turn (AI) ---");
         Random random = new Random();
-        ArrayList<Integer> possibleMoves = new ArrayList<>();
-        possibleMoves.add(1); // Basic attack is always possible
-
-        // TODO: A better implementation would be to have skill costs as attributes
-        // in the Character class instead of hardcoding them here.
-        if (current.getStamina() >= 20) { // Skill cost
-            possibleMoves.add(2);
+        // Simple heuristic: if AI can't afford skill/ult, prefer basic to regen.
+        if (current.getStamina() >= 60) {
+            current.ultimateAttack(opponent);
+            return;
         }
-        if (current.getStamina() >= 40) { // Ultimate cost
-            possibleMoves.add(3);
+        if (current.getStamina() >= 20) {
+            // 50/50 between skill and basic if it has enough for skill
+            if (random.nextBoolean()) current.skillAttack(opponent);
+            else current.basicAttack(opponent);
+            return;
         }
-
-        int choice = possibleMoves.get(random.nextInt(possibleMoves.size()));
-
-        switch (choice) {
-            case 1 -> current.basicAttack(opponent);
-            case 2 -> current.skillAttack(opponent);
-            case 3 -> current.ultimateAttack(opponent);
-        }
+        // Otherwise, basic to regain stamina
+        current.basicAttack(opponent);
     }
 
     // === HELPER METHODS ===
@@ -242,7 +236,7 @@ public class INCORRUPTIBLE {
         System.out.println("\n--- " + current.getName() + "'s Turn ---");
         // The costs displayed here are based on the current characters (Ren and Nuel).
         // If new characters have different costs, this text may need to be updated.
-        System.out.println("[1] Basic (Low Dmg, 0 Stamina)");
+    System.out.println("[1] Basic (Low Dmg, restores stamina)");
         System.out.println("[2] Skill (Med Dmg, 20 Stamina)");
         System.out.println("[3] Ultimate (High Dmg, 60 Stamina)");
         System.out.println("[x] Exit");

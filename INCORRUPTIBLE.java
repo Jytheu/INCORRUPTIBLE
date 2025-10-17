@@ -146,7 +146,7 @@ public class INCORRUPTIBLE {
             Character current = (turn % 2 == 0) ? player : ai;
             Character opponent = (turn % 2 == 0) ? ai : player;
 
-            // Stamina is restored by using Basic attacks now. No per-turn regen.
+            // Added on Oct 17 - Stamina is restored by using Basic attacks now. No per-turn regen.
             displayStats(player, ai);
 
             if (current == player) {
@@ -167,7 +167,7 @@ public class INCORRUPTIBLE {
     private static void takeAITurn(Character current, Character opponent) {
         System.out.println("\n--- " + current.getName() + "'s Turn (AI) ---");
         Random random = new Random();
-        // Simple heuristic: if AI can't afford skill/ult, prefer basic to regen.
+        // Added Oct 17 Simple heuristic: if AI can't afford skill/ult, prefer basic to regen.
         if (current.getStamina() >= 60) {
             current.ultimateAttack(opponent);
             return;

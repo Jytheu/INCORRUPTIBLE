@@ -5,9 +5,8 @@ public abstract class Character {
     protected int hp, maxHp;
     protected int stamina, maxStamina;
     protected int regen;
-    // Gameplay tuning constants
     protected Random random = new Random();
-    // Gameplay tuning constants
+   
         private static final double STARTING_STAMINA_RATIO = 0.375; // start at 37.5% of max
         private static final double BASIC_RESTORE_RATIO = 0.20; // basic attack restores 20% of max
 
@@ -16,14 +15,12 @@ public abstract class Character {
         this.maxHp = hp;
         this.hp = hp;
         this.maxStamina = stamina;
-        // start below full stamina to prevent immediate ult/skill spam
+      
         this.stamina = Math.max(1, (int)Math.round(this.maxStamina * STARTING_STAMINA_RATIO));
         this.regen = regen;
     }
 
-    // NOTE: stamina is recovered via basic attacks now; regenerateStamina was
-    // removed to avoid confusion. Any per-turn stamina behavior should be
-    // implemented explicitly elsewhere if desired.
+    
 
     public void recoverAfterStage() {
         int heal = (int)(maxHp * 0.3);
@@ -43,9 +40,7 @@ public abstract class Character {
         System.out.println(name + " uses " + skillName + " dealing " + dmg + " damage!");
     }
 
-    /**
-     * Called when a character performs a basic attack. Restores a portion of max stamina.
-     */
+    //Added Oct 17
     protected void onBasicAttack() {
         int restore = Math.max(1, (int)Math.round(maxStamina * BASIC_RESTORE_RATIO));
         stamina = Math.min(maxStamina, stamina + restore);

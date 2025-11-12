@@ -1,24 +1,29 @@
 class Nino extends Character {
     public Nino() {
-        // Default stats. TODO: Customize them!
-        super("Nino", 100, 100, 10);
+        super("Nino de Kidlat", 115, 105, 10);
     }
 
     @Override
     public void basicAttack(Character target) {
-        // Default attack values. TODO: Customize them!
-        performAttack(target, 10, 15, 0, "Basic Attack");
+        performAttack(target, 10, 16, 0, "Quick Jab");
+        onBasicAttack();
     }
 
     @Override
     public void skillAttack(Character target) {
-        // Default attack values. TODO: Customize them!
-        performAttack(target, 20, 25, 20, "Skill Attack");
+        performAttack(target, 20, 25, 25, "Lightning Strike");
     }
 
     @Override
     public void ultimateAttack(Character target) {
-        // Default attack values. TODO: Customize them!
-        performAttack(target, 35, 40, 40, "Ultimate Attack");
+        executeCombo(target, 2,2,30, 35, 45, "Flash Combo");
+    }
+     @Override
+    public int getSkillCost() { 
+                        return 25; 
+    }
+    @Override
+    public int getUltimateCost() { 
+                        return 45; 
     }
 }

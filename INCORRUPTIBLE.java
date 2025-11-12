@@ -111,8 +111,8 @@ public class INCORRUPTIBLE {
     }
 
     private static void playArcade(Character player, Scanner sc) {
-        System.out.println("\n--- Arcade Mode ---");
-        System.out.println("You will fight all other characters in sequence.");
+        System.out.println("\n--- ARCADE MODE ---");
+        System.out.println("It's a battle between you against the CORRUPTED.");
         // TODO: Add array of enemies and sequential battles
     }
 

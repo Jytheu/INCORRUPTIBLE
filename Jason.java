@@ -1,24 +1,29 @@
 class Jason extends Character {
     public Jason() {
-        // Default stats. TODO: Customize them!
-        super("Jason", 100, 100, 10);
+        super("Jason the Sniper", 100, 90, 10);
     }
 
     @Override
     public void basicAttack(Character target) {
-        // Default attack values. TODO: Customize them!
-        performAttack(target, 10, 15, 0, "Basic Attack");
+        performAttack(target, 10, 18, 0, "Eagle Eye");
+        onBasicAttack();
     }
 
     @Override
     public void skillAttack(Character target) {
-        // Default attack values. TODO: Customize them!
-        performAttack(target, 20, 25, 20, "Skill Attack");
+        performAttack(target, 22, 35, 30, "Pinpoint Strike");
     }
 
     @Override
     public void ultimateAttack(Character target) {
-        // Default attack values. TODO: Customize them!
-        performAttack(target, 35, 40, 40, "Ultimate Attack");
+        performAttack(target, 60, 90, 65, "Expose Shot");
+    }
+     @Override
+    public int getSkillCost() { 
+                        return 30; 
+    }
+    @Override
+    public int getUltimateCost() { 
+                        return 65; 
     }
 }

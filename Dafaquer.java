@@ -1,24 +1,29 @@
 class Dafaquer extends Character {
     public Dafaquer() {
-        // Default stats. TODO: Customize them!
-        super("Dafaquer", 100, 100, 10);
+        super("Dafaquer the Sustainer", 140, 110, 10);
     }
 
     @Override
     public void basicAttack(Character target) {
-        // Default attack values. TODO: Customize them!
-        performAttack(target, 10, 15, 0, "Basic Attack");
+        performAttack(target, 10, 14, 0, "Life Jab");
+        onBasicAttack();
     }
 
     @Override
     public void skillAttack(Character target) {
-        // Default attack values. TODO: Customize them!
-        performAttack(target, 20, 25, 20, "Skill Attack");
+        performAttack(target, 18, 26, 25, "Vital Combo");
     }
 
     @Override
     public void ultimateAttack(Character target) {
-        // Default attack values. TODO: Customize them!
-        performAttack(target, 35, 40, 40, "Ultimate Attack");
+        performAttack(target, 35, 50, 45, "Recovery Strike");
+    }
+     @Override
+    public int getSkillCost() { 
+                        return 25; 
+    }
+    @Override
+    public int getUltimateCost() { 
+                        return 45; 
     }
 }

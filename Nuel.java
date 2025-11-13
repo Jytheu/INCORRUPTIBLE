@@ -1,18 +1,27 @@
 class Nuel extends Character {
-    public Nuel() { super("Nuel the Combo Hero", 120, 100, 10); }
+    public Nuel() { super("Nuel the Combo Hero", 120, 130, 10); }
 
     @Override
     public void basicAttack(Character target) {
-        performAttack(target, 15, 18, 0, "Justice Combo");
+        executeCombo(target, 2, 4, 4,6,0, "Justice Combo");
+        onBasicAttack();
     }
 
     @Override
     public void skillAttack(Character target) {
-        performAttack(target, 20, 22, 20, "Strategic Uppercut");
+        executeCombo(target, 2, 2, 12, 17, 25, "Strategic Uppercut");
     }
 
     @Override
     public void ultimateAttack(Character target) {
-        performAttack(target, 40, 50, 60, "Power Debate");
+       executeCombo(target, 3,3,20, 25, 50, "Power Debate");
+    }
+     @Override
+    public int getSkillCost() { 
+                        return 25; 
+    }
+    @Override
+    public int getUltimateCost() { 
+                        return 50; 
     }
 }
